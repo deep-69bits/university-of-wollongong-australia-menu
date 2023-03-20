@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { app } from '../components/Firebase'
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/router'
-import 'responsive-navbar-react/dist/index.css'
 import Script from 'next/script'
 import Link from 'next/link';
 import { ToastContainer, toast } from 'react-toastify';

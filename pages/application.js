@@ -2,14 +2,12 @@ import React, { useEffect } from 'react'
 import { app } from '../components/Firebase'
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/router'
-import 'responsive-navbar-react/dist/index.css'
 import Script from 'next/script'
 import Link from 'next/link';
 import { getFirestore } from "firebase/firestore";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useState } from 'react';
 import { async } from '@firebase/util';
-import {Sugar} from 'react-preloaders';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const application = () => {
