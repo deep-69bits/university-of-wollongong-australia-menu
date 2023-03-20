@@ -12,7 +12,12 @@
     "firebase": "^9.18.0",
     "next": "13.2.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-preloaders": "^3.0.3",
+    "react-pro-sidebar": "^1.0.0",
+    "react-responsive-sidebar": "^0.1.16",
+    "react-toastify": "^9.1.1",
+    "responsive-navbar-react": "^1.2.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",

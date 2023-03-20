@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { getAuth, signInWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
 import {app} from './Firebase'
 import { useRouter } from 'next/router'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const SignIn = () => {
   
   
@@ -15,12 +17,14 @@ const SignIn = () => {
   const signin=()=>{
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
+      toast("Signed In");
       const user = userCredential.user;
       router.push('/home')
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
+      toast("Incorrect Email or Password");
     });
   }
 
@@ -37,7 +41,13 @@ const SignIn = () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const uid = user.uid;
-      router.push('/home')
+      console.log(user.email)
+      if(user.email==="admin@gmail.com"){
+      router.push('/adminconsole')
+      }
+      else{
+        router.push('/home')
+      }
     } else {
     }
   });
@@ -46,9 +56,11 @@ const SignIn = () => {
   return (
     <div>
       <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
+    
         <div
           className="w-full m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1"
         >
+        <ToastContainer />
           <div className="lg:w-1/2 dm:w-full sm:p-12">
             <div>
               <img src="https://uowplaybook.s3-ap-southeast-2.amazonaws.com/logo/logo-secondary.png" className="w-56 mx-auto"/>
@@ -113,7 +125,7 @@ const SignIn = () => {
             ></div>
           </div>
         </div>
-        <div className="REMOVE-THIS-ELEMENT-IF-YOU-ARE-USING-THIS-PAGE hidden treact-popup fixed inset-0 flex items-center justify-center">
+        <div className="REMOVE-THIS-ELEMENT-IF-YOU-ARE-USING-THIS-PAGE hidden treact-popup fixed inset-0  items-center justify-center">
           <div className="max-w-lg p-8 sm:pb-4 bg-white rounded shadow-lg text-center sm:text-left">
 
             <h3 className="text-xl sm:text-2xl font-semibold mb-6 flex flex-col sm:flex-row items-center">
