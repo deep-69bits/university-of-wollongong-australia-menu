@@ -37,7 +37,7 @@ const SignUp = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-        router.push('/home')
+        router.push('/Dashboard')
       } else {
       }
     });

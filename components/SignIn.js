@@ -19,7 +19,7 @@ const SignIn = () => {
     .then((userCredential) => {
       toast("Signed In");
       const user = userCredential.user;
-      router.push('/home')
+      router.push('/Dashboard')
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -46,7 +46,7 @@ const SignIn = () => {
       router.push('/adminconsole')
       }
       else{
-        router.push('/home')
+        router.push('/Dashboard')
       }
     } else {
     }

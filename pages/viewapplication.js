@@ -1,72 +1,87 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { app } from '../components/Firebase'
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/router'
 import Script from 'next/script'
 import Link from 'next/link';
+import { getFirestore } from "firebase/firestore";
+import { doc, setDoc, getDoc,deleteDoc } from "firebase/firestore";
+import { useState } from 'react';
+import { async } from '@firebase/util';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Head from 'next/head'
-import { getFirestore } from 'firebase/firestore';
-import { doc, setDoc } from "firebase/firestore"; 
-import { collection, getDocs } from "firebase/firestore";
 
-const home = () => {
-  const db=getFirestore(app)
-  const auth = getAuth(app);
-  const router = useRouter()
-  const [menu,setMenu]=useState([])
-  const signout = () => {
-    signOut(auth);
-    router.push('/')
-  };
+const viewapplication = () => {
+   
+    const db=getFirestore(app)
+    const auth = getAuth(app);
+    const router = useRouter()
+    const [menu,setMenu]=useState([])
+    const signout = () => {
+      signOut(auth);
+      router.push('/')
+    };
+    
+    const [check,setCheck]=useState(false)
 
- 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        if (user.email === "admin@gmail.com") {
-          router.push('/adminconsole')
+    const [name, setName] = useState('')
+    const [room, setRoom] = useState('')
+    const [requestmeal, setRequestMeal] = useState('')
+   
+    useEffect(() => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const uid = user.uid;
+          if (user.email === "admin@gmail.com") {
+            router.push('/adminconsole')
+          }
+          else {
+            const checkform = async () => {
+                const docRef = doc(db, "Users", user.email);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    console.log("Document data:", docSnap.data());
+                    setName(docSnap.data().name)
+                    setRoom(docSnap.data().room)
+                    setRequestMeal(docSnap.data().requested_meal)
+                    setCheck(true)
+                  } else {
+                    console.log("No such document!");
+                    setCheck(false)
+                  }
+            }
+            checkform()
+          }
+        } else {
+          router.push('/')
         }
-        else {
-          router.push('/home')
-        }
-      } else {
-        router.push('/')
-      }
-    });
-
-    const retrivewmenu=async ()=>{
-      const data = await getDocs(collection(db, "Menu"));
-       data.forEach((doc) => {
-
-        setMenu(doc.data().formfield)
       });
-     }
-     retrivewmenu();
-  }, [])
+  
+    }, [])
 
-  const images=[
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSM0kd6-409Yo4hH2PeXWFfoH9AREzu5Y_AZ1jAvVor2Q&usqp=CAU&ec=48600112",
-    "https://i.etsystatic.com/15418561/r/il/f06c80/3233862560/il_fullxfull.3233862560_jwqd.jpg",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0c7kEut6-MvEC4818tLxMgYXNVYk-OKExNpXzbGI5UQ&usqp=CAU&ec=48600112",
-    "https://i.pinimg.com/736x/24/cc/40/24cc40b9d31a6afcb8d8c16b50c86a44.jpg",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZSV1ku9nC48U8c3ArOVxQu-a_bVt6yz1kUzUMLOhcTClMhFV1rhrhHGTq-ICUW7Fnr3YxeBumTNc&usqp=CAU&ec=48600112",
-    "https://pbs.twimg.com/media/Dm1neA0X4AEMmnR.jpg",
-    "https://e0.pxfuel.com/wallpapers/699/264/desktop-wallpaper-love-lovememes-funny-profile-cute-disney-for-your-mobile-tablet-explore-aesthetic-cartoon-aesthetic-cartoon-cartoon-background-aesthetic.jpg",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw4Q7T2nUNCVwR-LbG_qD3sNbYv-RwcJW5hbUTwlA5Tw&usqp=CAU&ec=48600112",
-    "https://i0.wp.com/nicedpz.com/storage/2022/03/9b07a99b28ac731c5f8ace898b155fbc.jpg?resize=570%2C571&ssl=1",
-    "https://i.pinimg.com/736x/55/40/f9/5540f9c15a83d6098a0b1a3bb629b9e9.jpg",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeHP5F1vxAukYnA4I8-4riGxir0WOVSmRPqKcfxc4M9wOWgxGTVSDlL7bAWzZsxZQLeqQOucGBQWw&usqp=CAU&ec=48600112",
-    "https://img.freepik.com/premium-vector/cute-cartoon-penguin_159446-379.jpg?w=2000",
-    "https://cutewallpaper.org/21/anime-boy-profile-pictures/Anime-Boys-Drawception-Profile.jpg",
-    "https://i.pinimg.com/originals/c8/8c/53/c88c536fecb7cf04346b01ad412cfedb.jpg"
- ]
- const x= Math.floor(Math.random() * (14) )
+
+  
+    const images=[
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSM0kd6-409Yo4hH2PeXWFfoH9AREzu5Y_AZ1jAvVor2Q&usqp=CAU&ec=48600112",
+      "https://i.etsystatic.com/15418561/r/il/f06c80/3233862560/il_fullxfull.3233862560_jwqd.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0c7kEut6-MvEC4818tLxMgYXNVYk-OKExNpXzbGI5UQ&usqp=CAU&ec=48600112",
+      "https://i.pinimg.com/736x/24/cc/40/24cc40b9d31a6afcb8d8c16b50c86a44.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZSV1ku9nC48U8c3ArOVxQu-a_bVt6yz1kUzUMLOhcTClMhFV1rhrhHGTq-ICUW7Fnr3YxeBumTNc&usqp=CAU&ec=48600112",
+      "https://pbs.twimg.com/media/Dm1neA0X4AEMmnR.jpg",
+      "https://e0.pxfuel.com/wallpapers/699/264/desktop-wallpaper-love-lovememes-funny-profile-cute-disney-for-your-mobile-tablet-explore-aesthetic-cartoon-aesthetic-cartoon-cartoon-background-aesthetic.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw4Q7T2nUNCVwR-LbG_qD3sNbYv-RwcJW5hbUTwlA5Tw&usqp=CAU&ec=48600112",
+      "https://i0.wp.com/nicedpz.com/storage/2022/03/9b07a99b28ac731c5f8ace898b155fbc.jpg?resize=570%2C571&ssl=1",
+      "https://i.pinimg.com/736x/55/40/f9/5540f9c15a83d6098a0b1a3bb629b9e9.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeHP5F1vxAukYnA4I8-4riGxir0WOVSmRPqKcfxc4M9wOWgxGTVSDlL7bAWzZsxZQLeqQOucGBQWw&usqp=CAU&ec=48600112",
+      "https://img.freepik.com/premium-vector/cute-cartoon-penguin_159446-379.jpg?w=2000",
+      "https://cutewallpaper.org/21/anime-boy-profile-pictures/Anime-Boys-Drawception-Profile.jpg",
+      "https://i.pinimg.com/originals/c8/8c/53/c88c536fecb7cf04346b01ad412cfedb.jpg"
+   ]
+   const x= Math.floor(Math.random() * (14) )
 
   return (
-    <div className=' min-h-screen bg-cover bg-no-repeat'>
+    <div>
     <Head>
     <title>Create Next App</title>
     <meta name="description" content="Generated by create next app" />
@@ -125,23 +140,30 @@ const home = () => {
         </div>
       </div>
     </nav>
+   
+     {
+        check?
+          <div className='rounded-2xl shadow-2xl mt-10 lg:mt-40  px-4 py-10 lg:w-2/5 mx-auto'>
+              <input type="text" disabled value={name} className="my-4 block w-full  px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+              <input type="text" disabled value={room}  className="my-4 block w-full  px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+              <input type="text" disabled  value={requestmeal} className="my-4 block w-full  px-2 rounded-md border-0 py-1.5 text-gray-900 h-[100px] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"  />
+          </div>
+        :
+        <div className='h-[800px] flex flex-col items-center justify-center'>
+        <div className='gap-y-10'>
+        <h3 className='text-2xl text-center mx-auto my-auto mb-10'>Form not submitted yet</h3>
+        <a href="/application" className='my-10'>
+        <button className=' className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"'>
+        Submit Application
+        </button>
+        </a>
+        </div>
+        </div>
 
-  
-      
-      <h1 className='my-4 font-bold text-2xl mt-10  text-center'>Today's Menu</h1>
-      <div className='w-full px-4 lg:px-0 lg:w-1/5 m-auto text-center    '> 
-      {
-         menu.map((item,index)=>{
-          return(
-            <li className='duration-500 hover:scale-105 transition-all list-none w-full py-4 my-4 rounded-xl text-xl font-semibold shadow-xl bg-white'>{item.dish}</li>
-          )
-         })
-      }
-         
-      </div>
-
+     }
+     
     </div>
   )
 }
 
-export default home
+export default viewapplication
