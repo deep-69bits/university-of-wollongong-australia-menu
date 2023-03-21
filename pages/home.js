@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { app } from '../components/Firebase'
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/router'
@@ -7,11 +7,15 @@ import Link from 'next/link';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Head from 'next/head'
-const home = () => {
+import { getFirestore } from 'firebase/firestore';
+import { doc, setDoc } from "firebase/firestore"; 
+import { collection, getDocs } from "firebase/firestore";
 
+const home = () => {
+  const db=getFirestore(app)
   const auth = getAuth(app);
   const router = useRouter()
-
+  const [menu,setMenu]=useState([])
   const signout = () => {
     signOut(auth);
     router.push('/')
@@ -32,6 +36,15 @@ const home = () => {
         router.push('/')
       }
     });
+
+    const retrivewmenu=async ()=>{
+      const data = await getDocs(collection(db, "Menu"));
+       data.forEach((doc) => {
+
+        setMenu(doc.data().formfield)
+      });
+     }
+     retrivewmenu();
   }, [])
 
 
@@ -99,13 +112,15 @@ const home = () => {
   
       
       <h1 className='my-4 font-bold text-2xl mt-10  text-center'>Today's Menu</h1>
-      <div className='w-full px-4 lg:px-0 lg:w-3/5 m-auto text-center    '> 
-     
-          <li className='list-none w-full py-4 my-4 rounded-xl text-xl font-semibold shadow-xl bg-white'> Rice</li>
-          <li className='list-none w-full py-4 my-4 rounded-xl text-xl font-semibold shadow-xl bg-white'> Salad</li>
-          <li className='list-none w-full py-4 my-4 rounded-xl text-xl font-semibold shadow-xl bg-white'> Bread</li>
-          <li className='list-none w-full py-4 my-4 rounded-xl text-xl font-semibold shadow-xl bg-white'> Chicken</li>
-          <li className='list-none w-full py-4 my-4 rounded-xl text-xl font-semibold shadow-xl bg-white'> Hamburger</li>
+      <div className='w-full px-4 lg:px-0 lg:w-1/5 m-auto text-center    '> 
+      {
+         menu.map((item,index)=>{
+          return(
+            <li className='list-none w-full py-4 my-4 rounded-xl text-xl font-semibold shadow-xl bg-white'>{item.dish}</li>
+          )
+         })
+      }
+         
       </div>
 
     </div>

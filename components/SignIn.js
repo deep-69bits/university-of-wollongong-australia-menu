@@ -63,7 +63,7 @@ const SignIn = () => {
         <ToastContainer />
           <div className="lg:w-1/2 dm:w-full sm:p-12">
             <div>
-              <img src="https://uowplaybook.s3-ap-southeast-2.amazonaws.com/logo/logo-secondary.png" className="w-56 mx-auto"/>
+              <img src="https://uowplaybook.s3-ap-southeast-2.amazonaws.com/logo/logo-secondary.png" className="w-96 mx-auto"/>
             </div>
             <div className="  flex flex-col items-center">
 

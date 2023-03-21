@@ -1,13 +1,18 @@
-import React,{useEffect} from 'react'
+import React,{useEffect, useState} from 'react'
 import {app} from '../components/Firebase'
 import { getAuth, signOut,onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/router'
 import Script from 'next/script'
 import Head from 'next/head'
+import { getFirestore } from 'firebase/firestore';
+import { doc, setDoc } from "firebase/firestore"; 
+import { collection, getDocs } from "firebase/firestore";
+
+
 const adminconsole = () => {
     const auth = getAuth(app);
     const router = useRouter()
-   
+     const db=getFirestore(app)
     const signout = () => {
         signOut(auth);
         router.push('/')
@@ -17,8 +22,8 @@ useEffect(()=>{
           if (user) {
             const uid = user.uid;
             if(user.email==="admin@gmail.com"){
-              router.push('/adminconsole')
-              }
+               
+            }
             else{
                 router.push('/home')
             }
@@ -26,7 +31,48 @@ useEffect(()=>{
               router.push('/')
           }
         });
-  },[])
+          
+         const retrivewmenu=async ()=>{
+          const data = await getDocs(collection(db, "Menu"));
+           data.forEach((doc) => {
+
+            setFormFields(doc.data().formfield)
+          });
+         }
+         retrivewmenu();
+         
+       },[])
+
+  const [formfield,setFormFields]=useState([
+    {Dish: ''},
+  ])
+  
+  const addfields=(e)=>{
+    e.preventDefault(); 
+     let object={
+      Dish: ''
+     }
+     setFormFields([...formfield,object])
+  }
+
+  const handleFormChange=(index)=>{
+    let data=[...formfield];
+    data[index][event.target.name]=event.target.value;
+    setFormFields(data)
+  }
+
+  const removefields =(index)=>{
+    let data=[...formfield]
+    data.splice(index,1)
+   setFormFields(data)
+  }
+  
+  const submit= async()=>{
+    const docref=await setDoc(doc(db, "Menu","Dishes"), {
+      formfield
+    });
+  }
+
   return (
     <div>
     <Head>
@@ -87,9 +133,23 @@ useEffect(()=>{
         </div>
       </div>
     </nav>
-    
-
-    
+     
+    <h1 className='my-4 font-bold text-2xl mt-10  text-center'>Today's Menu</h1>
+    <div className='w-full px-4 lg:px-0 lg:w-1/5 m-auto text-center '>
+    {
+      formfield.map((form,index)=>{
+        return(
+          <div className='bg-white rounded-xl shadow-2xl py-4 my-4  font-bold text-xl '>
+          <input key={index} className="outline-none"  type="text" name='dish'  value={form.dish} placeholder='Dish' onChange={event => handleFormChange(index) }  />
+          <button onClick={ ()=> removefields(index) }>Remove</button>
+          </div>
+          )
+        })
+      }
+      <button className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none" onClick={addfields}  >Add Item</button>
+      <button className='mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none' onClick={submit}>Update</button>
+      
+    </div>
 
     </div>
   )
