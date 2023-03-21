@@ -1,10 +1,11 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useState,useRef} from 'react'
 import {app} from '../components/Firebase'
 import { getAuth, signOut,onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/router'
 import Script from 'next/script'
 import { getFirestore,collection, getDocs } from 'firebase/firestore';
 import Head from 'next/head'
+import ReactToPrint from 'react-to-print';  
 const adminapplications = () => {
 
     const db = getFirestore(app);
@@ -17,6 +18,9 @@ const adminapplications = () => {
         signOut(auth);
         router.push('/')
       };
+
+      const componentRef = useRef();
+
  useEffect(()=>{
         onAuthStateChanged(auth, (user) => {
           if (user) {
@@ -99,8 +103,13 @@ const adminapplications = () => {
         </div>
       </div>
     </nav>
+
+    <ReactToPrint
+        trigger={() => <div className='px-4'> <button  className="mt-5  tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full sm:w-40  mx-auto  py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">Print this out!</button> </div>} 
+        content={() => componentRef.current}
+      />
     
-    <div className='w-full lg:w-3/5 mx-auto px-4 mt-10  grid grid-flow-row gap-x-16 gap-y-10 grid-cols-1 lg:grid-cols-3'>
+    <div ref={componentRef} className='w-full lg:w-3/5 mx-auto px-4 mt-10  grid grid-flow-row gap-x-16 gap-y-10 grid-cols-1 lg:grid-cols-3'>
     {
         lateapplications.map((item,index)=>{
             console.log(lateapplications)
