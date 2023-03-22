@@ -15,6 +15,7 @@ const home = () => {
   const db = getFirestore(app)
   const auth = getAuth(app);
   const router = useRouter()
+  const user = auth.currentUser;
   const [menu, setMenu] = useState([])
   const signout = () => {
     signOut(auth);
@@ -30,7 +31,7 @@ const home = () => {
           router.push('/adminconsole')
         }
         else {
-          router.push('/home')
+          
         }
       } else {
         router.push('/')
@@ -77,7 +78,7 @@ const home = () => {
       <Script src="https://unpkg.com/@themesberg/flowbite@1.1.1/dist/flowbite.bundle.js" />
       <nav className="border-gray-200 bg-white px-2 py-5 shadow-2xl">
         <div className="container mx-auto flex flex-wrap items-center justify-between">
-          <a href="#" className="flex">
+          <a href="/Dashboard" className="flex">
             <img className='h-[50px] ' src="https://ik.imagekit.io/cmef8hxb6/index-removebg-preview_suXjc1Vcu.png?updatedAt=1679305145518" alt="" />
 
           </a>
@@ -86,7 +87,22 @@ const home = () => {
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 
               </div>
-              <img className='w-[50px] rounded-full  h-[50px]' src={images[x]} alt="" />
+              <span> {
+
+                user ?
+                  user.displayname ? <span className='flex '><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mx-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg> {user.displayName}  </span> : <span className='flex'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mx-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
+                  {user.displayName}
+                  </span>
+                  : <span ><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class=" mx-2 w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
+                  </span>
+
+              } </span>
             </div>
             <button data-collapse-toggle="mobile-menu-3" type="button" className="md:hidden text-gray-400 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-lg inline-flex items-center justify-center" aria-controls="mobile-menu-3" aria-expanded="false">
               <span className="sr-only">Open main menu</span>
@@ -107,7 +123,7 @@ const home = () => {
               <li>
                 <a href="/home" className="text-gray-700 hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 flex pl-3 pr-4 py-2 md:hover:text-blue-700 md:p-0" aria-current="page">
                   <svg width="30px" height="20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M128 352.576V352a288 288 0 0 1 491.072-204.224 192 192 0 0 1 274.24 204.48 64 64 0 0 1 57.216 74.24C921.6 600.512 850.048 710.656 736 756.992V800a96 96 0 0 1-96 96H384a96 96 0 0 1-96-96v-43.008c-114.048-46.336-185.6-156.48-214.528-330.496A64 64 0 0 1 128 352.64zm64-.576h64a160 160 0 0 1 320 0h64a224 224 0 0 0-448 0zm128 0h192a96 96 0 0 0-192 0zm439.424 0h68.544A128.256 128.256 0 0 0 704 192c-15.36 0-29.952 2.688-43.52 7.616 11.328 18.176 20.672 37.76 27.84 58.304A64.128 64.128 0 0 1 759.424 352zM672 768H352v32a32 32 0 0 0 32 32h256a32 32 0 0 0 32-32v-32zm-342.528-64h365.056c101.504-32.64 165.76-124.928 192.896-288H136.576c27.136 163.072 91.392 255.36 192.896 288z" /></svg>
-                  cafeteria
+                  Menu
                 </a>
               </li>
               <li>
@@ -117,9 +133,19 @@ const home = () => {
                   <path d="M9 8L15 8" stroke="#33363F" strokeWidth="2" strokeLinecap="round" />
                   <path d="M9 12L15 12" stroke="#33363F" strokeWidth="2" strokeLinecap="round" />
                 </svg>
-                  Application
+                Apply Late Meal
                 </a>
               </li >
+              <li>
+              <a href="/viewapplication" className="text-gray-700 hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 flex pl-3 pr-4 py-2 md:hover:text-blue-700 md:p-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+
+                View Application
+              </a>
+            </li >
 
               <li onClick={signout} className="text-gray-700 cursor-pointer hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 flex pl-3 pr-4 py-2 md:hover:text-blue-700 md:p-0">
                 <svg width="30px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -138,11 +164,16 @@ const home = () => {
       <h1 className='my-4 font-bold text-2xl mt-10  text-center'>Today's Menu</h1>
       <div className='w-full px-4 lg:px-0 lg:w-1/5 m-auto text-center    '>
         {
+          menu.length >0?
           menu.map((item, index) => {
+
             return (
+
               <li className='duration-500 hover:scale-105 transition-all list-none w-full py-4 my-4 rounded-xl text-xl font-semibold shadow-xl bg-white'>{item.dish}</li>
             )
           })
+          :
+          <div className=' text-xl'>Menu hasn't registered yet</div>
         }
 
       </div>
