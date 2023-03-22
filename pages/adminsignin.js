@@ -18,11 +18,11 @@ const adminsignin = () => {
     };
 
     const signin=()=>{
+       router.push('/adminconsole')
         if(email==='admin@gmail.com' && password==='123456'){
             signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                router.push('/adminconsole')
             })
             .catch((error) => {
                 const errorCode = error.code;
