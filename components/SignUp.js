@@ -12,12 +12,14 @@ const SignUp = () => {
   const [email,setEmail]=useState(null)
   const [password,setPassword]=useState(null)
   const [load,setLoad]=useState(true)
-
+  const [name,setName]=useState('')
+ 
   const signup=()=>{
     router.push('/')
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
     const user = userCredential.user;
+     user.displayName=name
     })
   .catch((error) => {
     const errorCode = error.code;
@@ -29,7 +31,12 @@ const SignUp = () => {
      setLoad(!load)
    }
    const changepassword=(e)=>{
+
     setPassword(e.target.value)
+    setLoad(!load)
+  }
+  const changename=(e)=>{
+    setName(e.target.value)
     setLoad(!load)
   }
 
@@ -50,13 +57,13 @@ const SignUp = () => {
      >
      <div className="flex-1  text-center hidden lg:flex">
      <div
-       className="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat bg-logo"
+       className=" xl:m-16 w-full bg-contain bg-center bg-no-repeat bg-logo"
      ></div>
    </div>
-      <div className="lg:w-1/2 xl:w-5/12  sm:p-12 ">
+      <div className="lg:w-1/2 xl:w-5/12  ">
         <div>
           <img
-
+            
             src="https://uowplaybook.s3-ap-southeast-2.amazonaws.com/logo/logo-secondary.png"
             className="w-96 mx-auto"
           />
@@ -74,6 +81,8 @@ const SignUp = () => {
               className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
               type="text"
               placeholder="Name"
+              value={name}
+              onChange={changename}
             />
 
               <input
@@ -93,6 +102,10 @@ const SignUp = () => {
                 value={password}
                 onChange={changepassword}
               />
+              {
+
+               password && password.length >=6? <p></p>:<p className='text-red-400 text-sm mt-2 mx-2'>Password must be 6 letters</p>
+              }
               <input
                 className="w-full mt-5 px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                 type="text"
