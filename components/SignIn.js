@@ -15,11 +15,11 @@ const SignIn = () => {
   const [load,setLoad]=useState(true)
 
   const signin=()=>{
+    router.push('/Dashboard')
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       toast("Signed In");
       const user = userCredential.user;
-      router.push('/Dashboard')
     })
     .catch((error) => {
       const errorCode = error.code;
