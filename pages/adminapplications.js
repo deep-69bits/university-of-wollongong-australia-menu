@@ -9,7 +9,7 @@ import ReactToPrint from 'react-to-print';
 const adminapplications = () => {
 
     const db = getFirestore(app);
-
+ const [sizeofapp,setsize]=useState(0)
     const auth = getAuth(app);
     const router = useRouter()
     const [lateapplications, setLateApplications] = useState([]);
@@ -34,6 +34,7 @@ const adminapplications = () => {
                 }
                 func()
                 console.log(lateapplications)
+                setsize(lateapplications.length)
             }
             else{
                 router.push('/home')
@@ -60,6 +61,20 @@ const adminapplications = () => {
     "https://i.pinimg.com/originals/c8/8c/53/c88c536fecb7cf04346b01ad412cfedb.jpg"
  ]
  const x= Math.floor(Math.random() * (14) )
+ const [firstapp,setFirstapp]=useState(0);
+ const [secondapp,setsecondapp]=useState(9)
+ const prev=()=>{
+    if(firstapp>=9){
+       setFirstapp(firstapp-10)
+       setsecondapp(secondapp-10)
+    }
+ }
+ const nextone=()=>{
+   
+      setFirstapp(firstapp+10)
+      setsecondapp(secondapp+10)
+   
+ }
   return (
     <div>
     <Head>
@@ -129,21 +144,25 @@ const adminapplications = () => {
     <div ref={componentRef} className='w-full lg:w-4/5 mx-auto px-4 mt-10 mb-10  grid grid-flow-row gap-x-3 gap-y-2 grid-cols-2 lg:grid-cols-2'>
     {
         lateapplications.map((item,index)=>{
-            console.log(lateapplications)
-            return(
+            
+              if(index>=firstapp && index<=secondapp){
+                return(
                 
-                <div key={index} className="transition duration-500 hover:scale-105 shadow-xl px-5 m py-3 rounded-2xl gap-y-1 w-full h-[200px] flex flex-col justify-between ">
-                <div className='gap-x-1 grid grid-flow-row grid-cols-2'>
-                <input type="text" name='name' value={item.name} disabled className='className="my-4 inline-block    px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
-                <input type="text" name='name' value={item.room} disabled className='className="my-4  inline-block  px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
-                </div>
-                <input type="text" name='name' value={item.requested_meal} disabled className='className="my-4  h-[120px] block w-full  px-2 rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
-                </div>
-                
-                
-                )
+                  <div key={index} className="transition duration-500 hover:scale-105 shadow-xl px-5 m py-3 rounded-2xl gap-y-1 w-full h-[200px] flex flex-col justify-between ">
+                  <div className='gap-x-1 grid grid-flow-row grid-cols-2'>
+                  <input type="text" name='name' value={item.name} disabled className='className="my-4 inline-block    px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
+                  <input type="text" name='name' value={item.room} disabled className='className="my-4  inline-block  px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
+                  </div>
+                  <input type="text" name='name' value={item.requested_meal} disabled className='className="my-4  h-[120px] block w-full  px-2 rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
+                  </div>   
+              )
+              }
             })
         }
+    </div>
+    <div className='my-20 m-auto text-center items-center justify-center '>
+    <button className='mx-10' onClick={prev}>previous</button>
+    <button className='mx-10' onClick={nextone}>next</button>
     </div>
     </div>
   )
