@@ -170,7 +170,7 @@ const Dashboard = () => {
         <div className='my-10 mx-auto px-5 w-full lg:w-2/5 '>
           <h1 className='text-center text-3xl font-serif font-semibold  '>Welcome to  I-House </h1>
 
-          <div className='lg:flex block justify-between'>
+          <div className='w-full  lg:w-1/3 m-auto block justify-between'>
             <a href="/home" className='w-full mx-4'> <button className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
               Menu
             </button></a>
@@ -179,7 +179,7 @@ const Dashboard = () => {
               Apply Late Meal
             </button></a>
 
-            <a href="/viewapplication" className='w-full mx-4'> <button className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+            <a href="/viewapplication" className=' w-full mx-4'> <button className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
               View Application
             </button></a>
           </div>

@@ -126,16 +126,18 @@ const adminapplications = () => {
         content={() => componentRef.current}
       />
     
-    <div ref={componentRef} className='w-full lg:w-3/5 mx-auto px-4 mt-10  grid grid-flow-row gap-x-16 gap-y-2 grid-cols-2 lg:grid-cols-3'>
+    <div ref={componentRef} className='w-full lg:w-4/5 mx-auto px-4 mt-10  grid grid-flow-row gap-x-3 gap-y-2 grid-cols-2 lg:grid-cols-3'>
     {
         lateapplications.map((item,index)=>{
             console.log(lateapplications)
             return(
                 
-                <div key={index} className="transition duration-500 hover:scale-105 shadow-xl px-5 m py-10 rounded-2xl gap-y-1 w-full h-[170px] flex flex-col justify-between ">
-                <input type="text" name='name' value={item.name} disabled className='className="my-4  block w-full  px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
-                <input type="text" name='name' value={item.room} disabled className='className="my-4  block w-full  px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
-                <input type="text" name='name' value={item.requested_meal} disabled className='className="my-4  h-[80px] block w-full  px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
+                <div key={index} className="transition duration-500 hover:scale-105 shadow-xl px-5 m py-3 rounded-2xl gap-y-1 w-full h-[130px] flex flex-col justify-between ">
+                <div className='gap-x-1 grid grid-flow-row grid-cols-2'>
+                <input type="text" name='name' value={item.name} disabled className='className="my-4 inline-block    px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
+                <input type="text" name='name' value={item.room} disabled className='className="my-4  inline-block  px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
+                </div>
+                <input type="text" name='name' value={item.requested_meal} disabled className='className="my-4  h-[80px] block w-full  px-2 rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
                 </div>
                 
                 
