@@ -149,7 +149,8 @@ const adminapplications = () => {
     
     <div ref={componentRef} className='w-full lg:w-4/5 mx-auto px-4 mt-10 mb-10  grid grid-flow-row gap-x-3 gap-y-2 grid-cols-2 lg:grid-cols-2'>
     {
-        lateapplications.map((item,index)=>{
+      lateapplications.length>0?    
+      lateapplications.map((item,index)=>{
             
               if(index>=firstapp && index<=secondapp){
                 return(
@@ -163,8 +164,13 @@ const adminapplications = () => {
                   </div>   
               )
               }
-            })
-        }
+        }):
+        <div className='float-right text-right translate-x-20'>
+        <span></span>
+        <span className='text-right m-auto b'> No Application now </span>
+        <span></span>
+        </div>
+    }
     </div>
     <div className='my-20 m-auto text-center items-center justify-center '>
     <button className='mx-10' onClick={prev}>previous</button>
