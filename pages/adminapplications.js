@@ -126,7 +126,7 @@ const adminapplications = () => {
         content={() => componentRef.current}
       />
     
-    <div ref={componentRef} className='w-full lg:w-4/5 mx-auto px-4 mt-10  grid grid-flow-row gap-x-3 gap-y-2 grid-cols-2 lg:grid-cols-3'>
+    <div ref={componentRef} className='w-full lg:w-4/5 mx-auto px-4 mt-10  grid grid-flow-row gap-x-3 gap-y-2 grid-cols-2 lg:grid-cols-2'>
     {
         lateapplications.map((item,index)=>{
             console.log(lateapplications)
