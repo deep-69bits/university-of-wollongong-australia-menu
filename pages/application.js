@@ -58,7 +58,10 @@ const application = () => {
     }
 
 
-
+    const [date, setDate] = useState(new Date());
+  function refreshClock() {
+    setDate(new Date());
+  }
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -86,7 +89,10 @@ const application = () => {
                 router.push('/Dashboard')
             }
         });
-
+        const timerId = setInterval(refreshClock, 1000);
+        return function cleanup() {
+          clearInterval(timerId);
+        };
       
     }, [])
 
@@ -126,7 +132,15 @@ const application = () => {
         "https://i.pinimg.com/originals/c8/8c/53/c88c536fecb7cf04346b01ad412cfedb.jpg"
      ]
      const x= Math.floor(Math.random() * (14) )
-
+     const weekday = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
     return (
         <div>
         <Head>
@@ -224,6 +238,12 @@ const application = () => {
                 </div>
             </nav>
             <h1 className='my-4 font-bold text-2xl mt-10  text-center'>Late meal form </h1>
+            <h1 className='font-bold text-2xl my-5  text-center'> 
+    
+            <span>
+              {weekday[date.getDay()]} <span> </span>
+              {date.getDate()} / {date.getMonth()} /{date.getUTCFullYear()}
+            </span>  </h1>
             {
                 
                 

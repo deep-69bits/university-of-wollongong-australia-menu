@@ -30,6 +30,10 @@ const viewapplication = () => {
   const [room, setRoom] = useState('')
   const [requestmeal, setRequestMeal] = useState('')
 
+  const [date, setDate] = useState(new Date());
+  function refreshClock() {
+    setDate(new Date());
+  }
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -58,6 +62,10 @@ const viewapplication = () => {
         router.push('/')
       }
     });
+    const timerId = setInterval(refreshClock, 1000);
+    return function cleanup() {
+      clearInterval(timerId);
+    };
 
   }, [])
 
@@ -87,7 +95,15 @@ const viewapplication = () => {
     "https://i.pinimg.com/originals/c8/8c/53/c88c536fecb7cf04346b01ad412cfedb.jpg"
   ]
   const x = Math.floor(Math.random() * (14))
-
+  const weekday = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
   return (
     <div>
       <Head>
@@ -199,6 +215,12 @@ const viewapplication = () => {
         check ?
            <div>
            <h1 className='text-2xl font-normal mt-10 text-center'>My Application</h1>
+           <h1 className='font-bold text-2xl my-5  text-center'> 
+    
+           <span>
+             {weekday[date.getDay()]} <span> </span>
+             {date.getDate()} / {date.getMonth()} /{date.getUTCFullYear()}
+           </span>  </h1>
           <div className='rounded-2xl shadow-2xl mt-10 lg:mt-30  px-4 py-10 lg:w-2/5 mx-auto transition-all duration-500 hover:scale-105'>
             <label htmlFor="first-name" className="block text-sm mt-2 font-medium leading-6 text-gray-900">Full name</label>
             <input type="text" disabled value={name} className="my-4 block w-full  px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />

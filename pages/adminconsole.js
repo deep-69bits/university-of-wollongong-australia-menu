@@ -50,6 +50,7 @@ const adminconsole = () => {
     return function cleanup() {
       clearInterval(timerId);
     };
+    
 
   }, [])
 
@@ -175,11 +176,11 @@ const adminconsole = () => {
       </nav>
 
       <h1 className='my-4 font-bold text-2xl mt-10  text-center'>Today's Menu</h1>
-      <h1 className='my-4 font-bold text-2xl my-5  text-center'> 
+      <h1 className='font-bold text-2xl my-5  text-center'> 
     
         <span>
           {weekday[date.getDay()]} <span> </span>
-          {date.getDate()}.{date.getMonth()}.{date.getUTCFullYear()}
+          {date.getDate()} / {date.getMonth()} /{date.getUTCFullYear()}
         </span>  </h1>
       <div className='w-full px-4 lg:px-0 lg:w-1/5 m-auto text-center '>
         {
