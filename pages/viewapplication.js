@@ -207,6 +207,7 @@ const viewapplication = () => {
             <label htmlFor="request" className="block text-sm mt-2 font-medium leading-6 text-gray-900">Request Meal</label>
             <input type="text" disabled value={requestmeal} className="my-4 block w-full  px-2 rounded-md border-0 py-1.5 text-gray-900 h-[100px] shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
             <button onClick={deletedoc} className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">Delete</button>
+            <button  className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none my-4"> <Link href={'/application'}>Update</Link> </button>
           </div>
           </div>
           :
