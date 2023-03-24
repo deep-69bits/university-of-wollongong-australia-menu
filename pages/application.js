@@ -30,22 +30,30 @@ const application = () => {
     const [requestmeal, setRequestMeal] = useState('')
 
     const db = getFirestore(app);
-
+   
     const submitfrom = async () => {
-        console.log(name, room, requestmeal);
-        const docref = await setDoc(doc(db, "Users/" + user.email,), {
-            name: name,
-            room: room,
-            requested_meal: requestmeal
-        });
-        console.log(docref)
-        if(check){
-            toast("You updated application successfully");
-            setTimeout(function(){router.push('/viewapplication')}, 3000);
+        let date = new Date();
+        let x=date.getHours();
+        if(x>=15 && x<=20){
+            toast("Cannot Submit application closed");
         }
         else{
-            toast("You submitted application successfully")
-            setTimeout(function(){router.push('/viewapplication')}, 3000);
+
+            console.log(name, room, requestmeal);
+            const docref = await setDoc(doc(db, "Users/" + user.email,), {
+                name: name,
+                room: room,
+                requested_meal: requestmeal
+            });
+            console.log(docref)
+            if(check){
+                toast("You updated application successfully");
+                setTimeout(function(){router.push('/viewapplication')}, 3000);
+            }
+            else{
+                toast("You submitted application successfully")
+                setTimeout(function(){router.push('/viewapplication')}, 3000);
+            }
         }
     }
 
