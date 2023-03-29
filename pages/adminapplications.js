@@ -1,50 +1,54 @@
-import React,{useEffect,useState,useRef} from 'react'
-import {app} from '../components/Firebase'
-import { getAuth, signOut,onAuthStateChanged } from "firebase/auth";
+import React, { useEffect, useState, useRef } from 'react'
+import { app } from '../components/Firebase'
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/router'
 import Script from 'next/script'
-import { getFirestore,collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import Head from 'next/head'
-import ReactToPrint from 'react-to-print';  
+import ReactToPrint from 'react-to-print';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const adminapplications = () => {
 
-    const db = getFirestore(app);
- const [sizeofapp,setsize]=useState(0)
-    const auth = getAuth(app);
-    const router = useRouter()
-    const [lateapplications, setLateApplications] = useState([]);
+  const db = getFirestore(app);
+  const [sizeofapp, setsize] = useState(0)
+  const auth = getAuth(app);
+  const router = useRouter()
+  const [lateapplications, setLateApplications] = useState([]);
 
-    const signout = () => {
-        signOut(auth);
-        router.push('/')
-      };
+  const signout = () => {
+    signOut(auth);
+    router.push('/')
+  };
 
-      const componentRef = useRef();
+  const componentRef = useRef();
 
- useEffect(()=>{
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            const uid = user.uid;
-            if(user.email==="admin@gmail.com"){
-                const func=async()=>{
-                      const data = await getDocs(collection(db, "Users"));
-                      data.forEach((doc) => {
-                       setLateApplications(data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))); 
-                     });
-                }
-                func()
-                console.log(lateapplications)
-                setsize(lateapplications.length)
-            }
-            else{
-                router.push('/home')
-            }
-             } else {
-              router.push('/')
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        if (user.email === "admin@gmail.com") {
+          const func = async () => {
+            const data = await getDocs(collection(db, "Users"));
+            data.forEach((doc) => {
+              setLateApplications(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+            });
           }
-        });
-  },[])
-  const images=[
+          func()
+          console.log(lateapplications)
+          setsize(lateapplications.length)
+        }
+        else {
+          router.push('/home')
+        }
+      } else {
+        router.push('/')
+      }
+    });
+  }, [])
+  const images = [
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSM0kd6-409Yo4hH2PeXWFfoH9AREzu5Y_AZ1jAvVor2Q&usqp=CAU&ec=48600112",
     "https://i.etsystatic.com/15418561/r/il/f06c80/3233862560/il_fullxfull.3233862560_jwqd.jpg",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0c7kEut6-MvEC4818tLxMgYXNVYk-OKExNpXzbGI5UQ&usqp=CAU&ec=48600112",
@@ -59,123 +63,161 @@ const adminapplications = () => {
     "https://img.freepik.com/premium-vector/cute-cartoon-penguin_159446-379.jpg?w=2000",
     "https://cutewallpaper.org/21/anime-boy-profile-pictures/Anime-Boys-Drawception-Profile.jpg",
     "https://i.pinimg.com/originals/c8/8c/53/c88c536fecb7cf04346b01ad412cfedb.jpg"
- ]
- const x= Math.floor(Math.random() * (14) )
- const [firstapp,setFirstapp]=useState(0);
- const [secondapp,setsecondapp]=useState(9)
- const prev=()=>{
-    if(firstapp>=9){
-       setFirstapp(firstapp-10)
-       setsecondapp(secondapp-10)
+  ]
+  const x = Math.floor(Math.random() * (14))
+  const [firstapp, setFirstapp] = useState(0);
+  const [secondapp, setsecondapp] = useState(9)
+  const prev = () => {
+    if (firstapp >= 9) {
+      setFirstapp(firstapp - 10)
+      setsecondapp(secondapp - 10)
     }
- }
- const nextone=()=>{
-   
-      setFirstapp(firstapp+10)
-      setsecondapp(secondapp+10)
-   
- }
+  }
+  const nextone = () => {
+
+    setFirstapp(firstapp + 10)
+    setsecondapp(secondapp + 10)
+  }
+  const deleteapplication = async (id, index) => {
+    confirmAlert({
+      title: 'Confirm to submit',
+      message: 'Are you sure to do this.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            toast("Application Deleted");
+            const docref = await deleteDoc(doc(db, "Users", id));
+            console.log(docref)
+            let data = [...lateapplications]
+            data.splice(index, 1)
+            setLateApplications(data)
+
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => { }
+        }
+      ]
+    });
+
+    // const docref=await deleteDoc(doc(db, "Users", id ));
+    // console.log(docref)
+  }
   return (
     <div>
-    <Head>
-    <title>Create Next App</title>
-    <meta name="description" content="Generated by create next app" />
-    <title>UNIVERSITY OF WOLLONGONG AUSTRALIA </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="https://ik.imagekit.io/cmef8hxb6/index-removebg-preview_suXjc1Vcu.png?updatedAt=1679305145518" />
-  </Head>
-    <Script src="https://unpkg.com/@themesberg/flowbite@1.1.1/dist/flowbite.bundle.js" />
-    <nav className="border-gray-200 bg-white px-2 py-5 shadow-2xl">
-      <div className="container mx-auto flex flex-wrap items-center justify-between">
-        <a href="#" className="flex">
-          <img className='h-[50px] ' src="https://ik.imagekit.io/cmef8hxb6/index-removebg-preview_suXjc1Vcu.png?updatedAt=1679305145518" alt="" />
+      <Head>
+        <title>Create Next App</title>
+        <meta name="description" content="Generated by create next app" />
+        <title>UNIVERSITY OF WOLLONGONG AUSTRALIA </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/x-icon" href="https://ik.imagekit.io/cmef8hxb6/index-removebg-preview_suXjc1Vcu.png?updatedAt=1679305145518" />
+      </Head>
+      <Script src="https://unpkg.com/@themesberg/flowbite@1.1.1/dist/flowbite.bundle.js" />
+      <nav className="border-gray-200 bg-white px-2 py-5 shadow-2xl">
+        <div className="container mx-auto flex flex-wrap items-center justify-between">
+          <a href="#" className="flex">
+            <img className='h-[50px] ' src="https://ik.imagekit.io/cmef8hxb6/index-removebg-preview_suXjc1Vcu.png?updatedAt=1679305145518" alt="" />
 
-        </a>
-        <div className="flex md:order-2">
-          <div className="relative mr-3 md:mr-0 hidden md:block">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          </a>
+          <div className="flex md:order-2">
+            <div className="relative mr-3 md:mr-0 hidden md:block">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 
+              </div>
+
+              <div>
+                <span ><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class=" mx-2 w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+                </span> Admin
+              </div>
             </div>
-          
-            <div> 
-            <span ><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class=" mx-2 w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-          </svg>
-          </span> Admin
-            </div>
+            <button data-collapse-toggle="mobile-menu-3" type="button" className="md:hidden text-gray-400 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-lg inline-flex items-center justify-center" aria-controls="mobile-menu-3" aria-expanded="false">
+              <span className="sr-only">Open main menu</span>
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd"></path></svg>
+              <svg className="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+            </button>
           </div>
-          <button data-collapse-toggle="mobile-menu-3" type="button" className="md:hidden text-gray-400 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-lg inline-flex items-center justify-center" aria-controls="mobile-menu-3" aria-expanded="false">
-            <span className="sr-only">Open main menu</span>
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd"></path></svg>
-            <svg className="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-          </button>
+          <div className="hidden md:flex justify-between items-center w-full md:w-auto md:order-1" id="mobile-menu-3">
+            <ul className="flex-col md:flex-row flex md:space-x-8 mt-4 md:mt-0 md:text-sm md:font-medium">
+              <li>
+                <a href="/adminconsole" className="text-gray-700 hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 flex pl-3 pr-4 py-2 md:hover:text-blue-700 md:p-0" aria-current="page">
+                  <svg width="30px" height="20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M128 352.576V352a288 288 0 0 1 491.072-204.224 192 192 0 0 1 274.24 204.48 64 64 0 0 1 57.216 74.24C921.6 600.512 850.048 710.656 736 756.992V800a96 96 0 0 1-96 96H384a96 96 0 0 1-96-96v-43.008c-114.048-46.336-185.6-156.48-214.528-330.496A64 64 0 0 1 128 352.64zm64-.576h64a160 160 0 0 1 320 0h64a224 224 0 0 0-448 0zm128 0h192a96 96 0 0 0-192 0zm439.424 0h68.544A128.256 128.256 0 0 0 704 192c-15.36 0-29.952 2.688-43.52 7.616 11.328 18.176 20.672 37.76 27.84 58.304A64.128 64.128 0 0 1 759.424 352zM672 768H352v32a32 32 0 0 0 32 32h256a32 32 0 0 0 32-32v-32zm-342.528-64h365.056c101.504-32.64 165.76-124.928 192.896-288H136.576c27.136 163.072 91.392 255.36 192.896 288z" /></svg>
+                  Menu
+                </a>
+              </li>
+
+              <li>
+                <a href="/adminapplications" className="text-gray-700 hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 flex pl-3 pr-4 py-2 md:hover:text-blue-700 md:p-0"><svg width="30px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 7C4 5.11438 4 4.17157 4.58579 3.58579C5.17157 3 6.11438 3 8 3H16C17.8856 3 18.8284 3 19.4142 3.58579C20 4.17157 20 5.11438 20 7V15C20 17.8284 20 19.2426 19.1213 20.1213C18.2426 21 16.8284 21 14 21H10C7.17157 21 5.75736 21 4.87868 20.1213C4 19.2426 4 17.8284 4 15V7Z" stroke="#33363F" strokeWidth="2" />
+                  <path d="M15 18L15 21M9 18L9 21" stroke="#33363F" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M9 8L15 8" stroke="#33363F" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M9 12L15 12" stroke="#33363F" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+                  Applications
+                </a>
+              </li >
+
+              <li onClick={signout} className="text-gray-700 cursor-pointer hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 flex pl-3 pr-4 py-2 md:hover:text-blue-700 md:p-0">
+                <svg width="30px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 21C10.2211 20.9984 8.48259 20.4697 7.004 19.4807C5.52542 18.4916 4.37308 17.0866 3.69255 15.443C3.01201 13.7995 2.8338 11.9911 3.18041 10.2463C3.52702 8.50153 4.38292 6.89859 5.63999 5.63995C5.70894 5.56919 5.79135 5.51296 5.88238 5.47456C5.97341 5.43616 6.0712 5.41638 6.16999 5.41638C6.26879 5.41638 6.36658 5.43616 6.4576 5.47456C6.54863 5.51296 6.63105 5.56919 6.69999 5.63995C6.84044 5.78058 6.91933 5.9712 6.91933 6.16995C6.91933 6.3687 6.84044 6.55933 6.69999 6.69995C5.96312 7.38657 5.3721 8.21458 4.96218 9.13457C4.55226 10.0546 4.33184 11.0477 4.31408 12.0547C4.29631 13.0618 4.48155 14.062 4.85877 14.9959C5.23598 15.9298 5.79742 16.7781 6.50961 17.4903C7.2218 18.2025 8.07013 18.764 9.00402 19.1412C9.9379 19.5184 10.9382 19.7036 11.9452 19.6859C12.9522 19.6681 13.9454 19.4477 14.8654 19.0378C15.7854 18.6278 16.6134 18.0368 17.3 17.3C17.9978 16.605 18.5515 15.779 18.9294 14.8695C19.3072 13.96 19.5017 12.9848 19.5017 12C19.5017 11.0151 19.3072 10.0399 18.9294 9.13039C18.5515 8.22088 17.9978 7.39493 17.3 6.69995C17.1595 6.55933 17.0807 6.3687 17.0807 6.16995C17.0807 5.9712 17.1595 5.78058 17.3 5.63995C17.3689 5.56919 17.4514 5.51296 17.5424 5.47456C17.6334 5.43616 17.7312 5.41638 17.83 5.41638C17.9288 5.41638 18.0266 5.43616 18.1176 5.47456C18.2086 5.51296 18.291 5.56919 18.36 5.63995C19.6171 6.89859 20.473 8.50153 20.8196 10.2463C21.1662 11.9911 20.988 13.7995 20.3074 15.443C19.6269 17.0866 18.4746 18.4916 16.996 19.4807C15.5174 20.4697 13.7789 20.9984 12 21Z" fill="#000000" />
+                  <path d="M12 12.75C11.8019 12.7474 11.6126 12.6676 11.4725 12.5275C11.3324 12.3874 11.2526 12.1981 11.25 12V4C11.25 3.80109 11.329 3.61032 11.4697 3.46967C11.6103 3.32902 11.8011 3.25 12 3.25C12.1989 3.25 12.3897 3.32902 12.5303 3.46967C12.671 3.61032 12.75 3.80109 12.75 4V12C12.7474 12.1981 12.6676 12.3874 12.5275 12.5275C12.3874 12.6676 12.1981 12.7474 12 12.75Z" fill="#000000" />
+                </svg>
+                Sign out
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="hidden md:flex justify-between items-center w-full md:w-auto md:order-1" id="mobile-menu-3">
-          <ul className="flex-col md:flex-row flex md:space-x-8 mt-4 md:mt-0 md:text-sm md:font-medium">
-            <li>
-              <a href="/adminconsole" className="text-gray-700 hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 flex pl-3 pr-4 py-2 md:hover:text-blue-700 md:p-0" aria-current="page">
-              <svg width="30px" height="20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M128 352.576V352a288 288 0 0 1 491.072-204.224 192 192 0 0 1 274.24 204.48 64 64 0 0 1 57.216 74.24C921.6 600.512 850.048 710.656 736 756.992V800a96 96 0 0 1-96 96H384a96 96 0 0 1-96-96v-43.008c-114.048-46.336-185.6-156.48-214.528-330.496A64 64 0 0 1 128 352.64zm64-.576h64a160 160 0 0 1 320 0h64a224 224 0 0 0-448 0zm128 0h192a96 96 0 0 0-192 0zm439.424 0h68.544A128.256 128.256 0 0 0 704 192c-15.36 0-29.952 2.688-43.52 7.616 11.328 18.176 20.672 37.76 27.84 58.304A64.128 64.128 0 0 1 759.424 352zM672 768H352v32a32 32 0 0 0 32 32h256a32 32 0 0 0 32-32v-32zm-342.528-64h365.056c101.504-32.64 165.76-124.928 192.896-288H136.576c27.136 163.072 91.392 255.36 192.896 288z" /></svg>
-                Menu
-              </a>
-            </li>
-
-            <li>
-              <a href="/adminapplications"  className="text-gray-700 hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 flex pl-3 pr-4 py-2 md:hover:text-blue-700 md:p-0"><svg width="30px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 7C4 5.11438 4 4.17157 4.58579 3.58579C5.17157 3 6.11438 3 8 3H16C17.8856 3 18.8284 3 19.4142 3.58579C20 4.17157 20 5.11438 20 7V15C20 17.8284 20 19.2426 19.1213 20.1213C18.2426 21 16.8284 21 14 21H10C7.17157 21 5.75736 21 4.87868 20.1213C4 19.2426 4 17.8284 4 15V7Z" stroke="#33363F" strokeWidth="2" />
-                <path d="M15 18L15 21M9 18L9 21" stroke="#33363F" strokeWidth="2" strokeLinecap="round" />
-                <path d="M9 8L15 8" stroke="#33363F" strokeWidth="2" strokeLinecap="round" />
-                <path d="M9 12L15 12" stroke="#33363F" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-                Applications
-              </a>
-            </li >
-
-            <li onClick={signout} className="text-gray-700 cursor-pointer hover:bg-gray-50 border-b border-gray-100 md:hover:bg-transparent md:border-0 flex pl-3 pr-4 py-2 md:hover:text-blue-700 md:p-0">
-              <svg width="30px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 21C10.2211 20.9984 8.48259 20.4697 7.004 19.4807C5.52542 18.4916 4.37308 17.0866 3.69255 15.443C3.01201 13.7995 2.8338 11.9911 3.18041 10.2463C3.52702 8.50153 4.38292 6.89859 5.63999 5.63995C5.70894 5.56919 5.79135 5.51296 5.88238 5.47456C5.97341 5.43616 6.0712 5.41638 6.16999 5.41638C6.26879 5.41638 6.36658 5.43616 6.4576 5.47456C6.54863 5.51296 6.63105 5.56919 6.69999 5.63995C6.84044 5.78058 6.91933 5.9712 6.91933 6.16995C6.91933 6.3687 6.84044 6.55933 6.69999 6.69995C5.96312 7.38657 5.3721 8.21458 4.96218 9.13457C4.55226 10.0546 4.33184 11.0477 4.31408 12.0547C4.29631 13.0618 4.48155 14.062 4.85877 14.9959C5.23598 15.9298 5.79742 16.7781 6.50961 17.4903C7.2218 18.2025 8.07013 18.764 9.00402 19.1412C9.9379 19.5184 10.9382 19.7036 11.9452 19.6859C12.9522 19.6681 13.9454 19.4477 14.8654 19.0378C15.7854 18.6278 16.6134 18.0368 17.3 17.3C17.9978 16.605 18.5515 15.779 18.9294 14.8695C19.3072 13.96 19.5017 12.9848 19.5017 12C19.5017 11.0151 19.3072 10.0399 18.9294 9.13039C18.5515 8.22088 17.9978 7.39493 17.3 6.69995C17.1595 6.55933 17.0807 6.3687 17.0807 6.16995C17.0807 5.9712 17.1595 5.78058 17.3 5.63995C17.3689 5.56919 17.4514 5.51296 17.5424 5.47456C17.6334 5.43616 17.7312 5.41638 17.83 5.41638C17.9288 5.41638 18.0266 5.43616 18.1176 5.47456C18.2086 5.51296 18.291 5.56919 18.36 5.63995C19.6171 6.89859 20.473 8.50153 20.8196 10.2463C21.1662 11.9911 20.988 13.7995 20.3074 15.443C19.6269 17.0866 18.4746 18.4916 16.996 19.4807C15.5174 20.4697 13.7789 20.9984 12 21Z" fill="#000000" />
-                <path d="M12 12.75C11.8019 12.7474 11.6126 12.6676 11.4725 12.5275C11.3324 12.3874 11.2526 12.1981 11.25 12V4C11.25 3.80109 11.329 3.61032 11.4697 3.46967C11.6103 3.32902 11.8011 3.25 12 3.25C12.1989 3.25 12.3897 3.32902 12.5303 3.46967C12.671 3.61032 12.75 3.80109 12.75 4V12C12.7474 12.1981 12.6676 12.3874 12.5275 12.5275C12.3874 12.6676 12.1981 12.7474 12 12.75Z" fill="#000000" />
-              </svg>
-              Sign out
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-    <ReactToPrint
-        trigger={() => <div className='px-4'> <button  className="mt-5  tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full sm:w-40  mx-auto  py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">Print this out!</button> </div>} 
+      </nav>
+      <ToastContainer />
+      <ReactToPrint
+        trigger={() => <div className='px-4'> <button className="mt-5  tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full sm:w-40  mx-auto  py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">Print this out!</button> </div>}
         content={() => componentRef.current}
       />
-    
-    <div ref={componentRef} className='w-full lg:w-4/5 mx-auto px-4 mt-10 mb-10  grid grid-flow-row gap-x-3 gap-y-2 grid-cols-2 lg:grid-cols-2'>
-    {
-      lateapplications.length>0?    
-      lateapplications.map((item,index)=>{
-            
-              if(index>=firstapp && index<=secondapp){
-                return(
-                
-                  <div key={index} className="transition duration-500 hover:scale-105 shadow-xl px-5 m py-3 rounded-2xl gap-y-1 w-full h-[200px] flex flex-col justify-between ">
-                  <div className='gap-x-1 grid grid-flow-row grid-cols-2'>
-                  <input type="text" name='name' value={item.name} disabled className='className="my-4 inline-block    px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
-                  <input type="text" name='name' value={item.room} disabled className='className="my-4  inline-block  px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
+
+      <div ref={componentRef} className='w-full lg:w-4/5 mx-auto px-4 mt-10 mb-10  grid grid-flow-row gap-x-3 gap-y-2 grid-cols-2 lg:grid-cols-2'>
+        {
+          lateapplications.length > 0 ?
+            lateapplications.map((item, index) => {
+
+              if (index >= firstapp && index <= secondapp) {
+                return (
+
+                  <div key={index} className="transition duration-500 hover:scale-105 shadow-xl px-5 m py-3 rounded-2xl gap-y-1 w-full h-[190px] flex flex-col justify-between ">
+                    <div className='float-right  cursor-default'>
+                      <span className='cursor-pointer inline-block'
+                        onClick={() => {
+                          deleteapplication(item.id, index)
+                        }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </span>
+
+                    </div>
+                    <div className='gap-x-1 grid grid-flow-row grid-cols-2'>
+                      <input type="text" name='name' value={item.name} disabled className='className="my-4 inline-block    px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
+                      <input type="text" name='name' value={item.room} disabled className='className="my-4  inline-block  px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
+                    </div>
+                    <input type="text" name='name' value={item.requested_meal} disabled className='className="my-4  h-[110px] block w-full  px-2 rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
                   </div>
-                  <input type="text" name='name' value={item.requested_meal} disabled className='className="my-4  h-[120px] block w-full  px-2 rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"' />
-                  </div>   
-              )
+                )
               }
-        }):
-        <div className='float-right text-right translate-x-20'>
-        <span></span>
-        <span className='text-right m-auto b'> No Application now </span>
-        <span></span>
-        </div>
-    }
-    </div>
-    <div className='my-20 m-auto text-center items-center justify-center '>
-    <button className='mx-10' onClick={prev}>previous</button>
-    <button className='mx-10' onClick={nextone}>next</button>
-    </div>
+            }) :
+            <div className='float-right text-right translate-x-20'>
+              <span></span>
+              <span className='text-right m-auto b'> No Application now </span>
+              <span></span>
+            </div>
+        }
+      </div>
+      <div className='my-20 m-auto text-center items-center justify-center '>
+        <button className='mx-10' onClick={prev}>previous</button>
+        <button className='mx-10' onClick={nextone}>next</button>
+      </div>
     </div>
   )
 }

@@ -7,7 +7,8 @@ import Head from 'next/head'
 import { getFirestore } from 'firebase/firestore';
 import { doc, setDoc } from "firebase/firestore";
 import { collection, getDocs } from "firebase/firestore";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const adminconsole = () => {
   const auth = getAuth(app);
@@ -79,6 +80,7 @@ const adminconsole = () => {
   }
 
   const submit = async () => {
+    toast("Menu Updated");
     const docref = await setDoc(doc(db, "Menu", "Dishes"), {
       formfield
     });
@@ -174,7 +176,7 @@ const adminconsole = () => {
           </div>
         </div>
       </nav>
-
+      <ToastContainer />
       <h1 className='my-4 font-bold text-2xl mt-10  text-center'>Today's Menu</h1>
       <h1 className='font-bold text-2xl my-5  text-center'> 
     
