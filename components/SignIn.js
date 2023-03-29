@@ -94,7 +94,7 @@ const SignIn = () => {
                     value={password}
                     onChange={changepassword}
                   />
-                  <button
+                  <button onClick={signin}
                     className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-[200px] m-auto py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
                   >
                     <svg
@@ -109,7 +109,7 @@ const SignIn = () => {
                       <circle cx="8.5" cy="7" r="4" />
                       <path d="M20 8v6M23 11h-6" />
                     </svg>
-                    <span className="ml-3" onClick={signin}>
+                    <span className="ml-3" >
                       Sign In
                     </span>
                   </button>
