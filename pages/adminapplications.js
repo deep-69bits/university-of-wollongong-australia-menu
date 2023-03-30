@@ -80,7 +80,7 @@ const adminapplications = () => {
   }
   const deleteapplication = async (id, index) => {
     confirmAlert({
-      title: 'Confirm to submit',
+      title: 'Confirm to Delete',
       message: 'Are you sure to do this.',
       buttons: [
         {
@@ -104,6 +104,28 @@ const adminapplications = () => {
 
     // const docref=await deleteDoc(doc(db, "Users", id ));
     // console.log(docref)
+  }
+  const deleteall=()=>{
+    confirmAlert({
+      title: 'Confirm to Delete All Apllication',
+      message: 'Are you sure to do this.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            toast("All Application Deleted");
+            router.push('/adminconsole')
+            lateapplications.map(async(item,index)=>{
+              const docref = await deleteDoc(doc(db, "Users", item.id));
+            })
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => { }
+        }
+      ]
+    });
   }
   return (
     <div>
@@ -173,10 +195,11 @@ const adminapplications = () => {
       </nav>
       <ToastContainer />
       <ReactToPrint
-        trigger={() => <div className='px-4'> <button className="mt-5  tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full sm:w-40  mx-auto  py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">Print this out!</button> </div>}
+      className="inline-block"
+        trigger={() =><button className="mt-5  tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full sm:w-40  mx-auto  py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">Print this out!</button> }
         content={() => componentRef.current}
       />
-
+       <button onClick={deleteall} className="mt-5   tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full sm:w-40  mx-auto  py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">Delete All!</button> 
       <div ref={componentRef} className='w-full lg:w-4/5 mx-auto px-4 mt-10 mb-10  grid grid-flow-row gap-x-3 gap-y-2 grid-cols-2 lg:grid-cols-2'>
         {
           lateapplications.length > 0 ?
